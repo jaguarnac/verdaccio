@@ -6,7 +6,7 @@ import Readme from '../Readme';
 
 import classes from './packageDetail.scss';
 
-const PackageDetail = (props) => {
+const PackageDetail = ({packageName, readMe}) => {
  const displayState = (readMe) => {
    if (isNil(readMe)) {
      return;
@@ -16,9 +16,9 @@ const PackageDetail = (props) => {
 
   return (
     <div className={classes.pkgDetail}>
-      <h1 className={ classes.title }>{ props.package }</h1>
+      <h1 className={classes.title}>{packageName}</h1>
       <div className={classes.readme}>
-        {displayState(props.readMe)}
+        {displayState(readMe)}
       </div>
     </div>
   );
@@ -26,7 +26,7 @@ const PackageDetail = (props) => {
 
 PackageDetail.propTypes = {
   readMe: PropTypes.string,
-  package: PropTypes.string.isRequired
+  packageName: PropTypes.string.isRequired
 };
 
 export default PackageDetail;

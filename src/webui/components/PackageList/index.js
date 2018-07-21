@@ -8,6 +8,11 @@ import NoItems from '../NoItems';
 
 import classes from './packageList.scss';
 
+import {
+  authorFormatter,
+  licenseFomratter
+} from '../../utils/package';
+
 export default class PackageList extends React.Component {
   static propTypes = {
     packages: PropTypes.array,
@@ -34,9 +39,16 @@ export default class PackageList extends React.Component {
   }
 
   renderList() {
-    return this.props.packages.map((pkg, i)=> (
-      <li key={i}><Package package={pkg} /></li>
-    ));
+    return this.props.packages.map((pkg, i) => {
+      const {name, version, description, time} = pkg;
+      const author = authorFormatter(pkg.author);
+      const license = licenseFomratter(pkg.license);
+      return (
+        <li key={i}>
+          <Package {...{name, version, author, description, license, time}} />
+        </li>
+      );
+    });
   }
 
   renderOptions() {

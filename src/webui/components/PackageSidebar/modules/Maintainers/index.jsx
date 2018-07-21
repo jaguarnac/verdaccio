@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
+import has from 'lodash/has';
 import uniqBy from 'lodash/uniqBy';
 import Module from '../../Module';
 
 import classes from './style.scss';
 import MaintainerInfo from './MaintainerInfo';
+import ModuleContentPlaceholder from '../../ModuleContentPlaceholder';
 
 export default class Maintainers extends React.Component {
   static propTypes = {
@@ -66,28 +68,30 @@ export default class Maintainers extends React.Component {
       });
   }
 
+  rednerAuthorAndContributors(author) {
+    return (
+      <div>
+      <ul className="maintainer-author">
+        {author && author.name && <MaintainerInfo title="Author" name={author.name} avatar={author.avatar} />}
+        {this.renderContributors()}
+      </ul>
+        {!this.showAllContributors && <button
+          onClick={this.handleShowAllContributors}
+          className={classes.showAllContributors}
+          title="Current list only show the author and first 5 contributors unique by name"
+        >
+          Show all contributor
+          </button>}
+      </div>
+    );
+  }
+
   render() {
     let author = this.author;
-
-    return (
-      <Module
-        title="Maintainers"
-        className={classes.maintainersModule}
-      >
-        <ul className="maintainer-author">
-          {author && <MaintainerInfo title="Author" name={author.name} avatar={author.avatar}/>}
-          {this.renderContributors()}
-        </ul>
-        {!this.showAllContributors && (
-          <button
-            onClick={this.handleShowAllContributors}
-            className={classes.showAllContributors}
-            title="Current list only show the author and first 5 contributors unique by name"
-          >
-            Show all contributor
-          </button>
-        )}
-      </Module>
-    );
+    const contributors = this.renderContributors();
+    // console.log(contributors, author);
+    return <Module title="Maintainers" className={classes.maintainersModule}>
+        {(contributors.length || has(author, 'name')) ? this.rednerAuthorAndContributors(author) : (<ModuleContentPlaceholder text="Not Available!" />)}
+      </Module>;
   }
 }
